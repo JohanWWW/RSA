@@ -1,28 +1,20 @@
 package com.company;
 
-import rsa.RSAKey;
+import rsa.RSACryptor;
 import rsa.RSAKeyGenerator;
-import rsa.RSAKeyIO;
 import rsa.RSAKeyPair;
 
 import java.io.IOException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
         RSAKeyPair keyPair = RSAKeyGenerator.generateKeys(4096);
 
-        var keyIO = new RSAKeyIO();
-        keyIO.write("key", keyPair);
+        byte[] encrypted = RSACryptor.encrypt("Hello, World!".getBytes(), keyPair.getPublicKey());
+        System.out.println(new String(encrypted));
 
-        RSAKeyPair readKeyPair = keyIO.read("key");
-
-        System.out.println("PUBLIC KEY");
-        System.out.println("Key:\t" + readKeyPair.getPublicKey().getKey());
-        System.out.println("n:\t\t" + readKeyPair.getPublicKey().getN());
-        System.out.println();
-        System.out.println("PRIVATE KEY");
-        System.out.println("Key:\t" + readKeyPair.getPrivateKey().getKey());
-        System.out.println("n:\t\t" + readKeyPair.getPrivateKey().getN());
+        byte[] decrypted = RSACryptor.decrypt(encrypted, keyPair.getPrivateKey());
+        System.out.println(new String(decrypted));
     }
 }
