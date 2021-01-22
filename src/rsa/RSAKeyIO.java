@@ -20,10 +20,18 @@ public class RSAKeyIO {
     }
 
     public RSAKeyPair read(String name) throws IOException, ClassNotFoundException {
-        RSAKey publicKey = readPublicKey(name);
-        RSAKey privateKey = readPrivateKey(name);
+        RSAKey publicKey = readKey(publicKeyFullName(name));
+        RSAKey privateKey = readKey(privateKeyFullName(name));
 
         return new RSAKeyPair(publicKey, privateKey);
+    }
+
+    public RSAKey readKey(String name) throws IOException, ClassNotFoundException {
+        var fileInputStream = new FileInputStream(filePath + name);
+        var objectInputStream = new ObjectInputStream(fileInputStream);
+        RSAKey key = (RSAKey) objectInputStream.readObject();
+        objectInputStream.close();
+        return key;
     }
 
     private void writePrivateKey(String name, RSAKey key) throws IOException {
@@ -38,22 +46,6 @@ public class RSAKeyIO {
         var objectOutputStream = new ObjectOutputStream(fileOutputStream);
         objectOutputStream.writeObject(key);
         objectOutputStream.close();
-    }
-
-    private RSAKey readPrivateKey(String name) throws IOException, ClassNotFoundException {
-        var fileInputStream = new FileInputStream(filePath + privateKeyFullName(name));
-        var objectInputStream = new ObjectInputStream(fileInputStream);
-        RSAKey key = (RSAKey) objectInputStream.readObject();
-        objectInputStream.close();
-        return key;
-    }
-
-    private RSAKey readPublicKey(String name) throws IOException, ClassNotFoundException {
-        var fileInputStream = new FileInputStream(filePath + publicKeyFullName(name));
-        var objectInputStream = new ObjectInputStream(fileInputStream);
-        RSAKey key = (RSAKey) objectInputStream.readObject();
-        objectInputStream.close();
-        return key;
     }
 
     private String addSlashIfMissing(String path) {
