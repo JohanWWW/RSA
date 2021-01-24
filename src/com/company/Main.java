@@ -10,8 +10,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -108,6 +106,8 @@ public class Main {
     }
 
     private static void encryptTextFile() {
+        readString("Please place the text file in the input folder (./IO/input/) and press enter to continue.");
+
         File file = getFileMenu("Select file");
 
         String text;
@@ -134,6 +134,8 @@ public class Main {
     }
 
     private static void decryptTextFile() {
+        readString("Please place the encrypted text file in the input folder (./IO/input/) and press enter to continue.");
+
         File file = getFileMenu("Select file");
 
         String text;
@@ -160,6 +162,8 @@ public class Main {
     }
 
     private static void encryptBinary() {
+        readString("Please place the binary file in the input folder (./IO/input/) and press enter to continue.");
+
         File file = getFileMenu("Select file");
 
         byte[] data;
@@ -186,6 +190,8 @@ public class Main {
     }
 
     private static void decryptBinary() {
+        readString("Please place the encrypted binary file in the input folder (./IO/input/) and press enter to continue.");
+
         File file = getFileMenu("Select file");
 
         byte[] data;
@@ -212,20 +218,42 @@ public class Main {
     }
 
     private static RSAKey getKeyMenu(String title) {
+        var file = new File("keys");
         var keyIO = new RSAKeyIO("keys");
 
         System.out.println(title);
 
-        RSAKey key = null;
-        while (key == null) {
-            String keyName = readString("Please enter key name: ");
+        RSAKey key;
+
+        File[] children = file.listFiles(fileFilter -> !fileFilter.getName().equals("readme.txt"));
+        for (int i = 0; i < children.length; i++) {
+            System.out.printf("[%s] -> %s\n", i, children[i].getName());
+        }
+
+        while (true) {
+            int index;
             try {
-                key = keyIO.readKey(keyName);
+                index = readInt("Please enter index: ");
             }
-            catch (IOException | ClassNotFoundException e) {
+            catch (NumberFormatException e) {
+                System.out.println("Please enter integers only.");
+                continue;
+            }
+
+            if (index < 0 || index >= children.length) {
+                System.out.println("Please enter an integer between 0 and " + children.length + " (exclusive).");
+                continue;
+            }
+
+            try {
+                key = keyIO.readKey(children[index].getName());
+            } catch (IOException | ClassNotFoundException e) {
                 System.err.println("An error occurred. Please try again.");
                 e.printStackTrace();
+                continue;
             }
+
+            break;
         }
 
         return key;
@@ -236,7 +264,7 @@ public class Main {
 
         System.out.println(title);
 
-        File[] children = file.listFiles();
+        File[] children = file.listFiles(fileFilter -> !fileFilter.getName().equals("readme.txt"));
         for (int i = 0; i < children.length; i++) {
             System.out.printf("[%s] -> %s\n", i, children[i].getName());
         }
@@ -255,6 +283,7 @@ public class Main {
                 System.out.println("Please enter an integer between 0 and " + children.length + " (exclusive).");
                 continue;
             }
+
             break;
         }
 
