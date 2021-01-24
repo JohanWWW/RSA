@@ -31,4 +31,10 @@ hs_err_pid*
 *_priv.key
 *_pub.key
 
+# IO folder
+IO/input/*
+IO/output/*
+!IO/input/readme.txt
+!IO/output/readme.txt
+
 # End of https://www.toptal.com/developers/gitignore/api/java
