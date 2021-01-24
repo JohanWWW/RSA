@@ -40,9 +40,11 @@ public class Main {
             int choice;
             try {
                 choice = readInt("Make a selection: ");
+                System.out.println();
             }
             catch (NumberFormatException e) {
                 System.out.println("Please enter integers only.");
+                System.out.println();
                 continue;
             }
 
@@ -57,6 +59,8 @@ public class Main {
                 case 9 -> System.exit(0);
                 default -> System.out.println(choice + " is not an option");
             }
+
+            System.out.println();
         }
 
     }

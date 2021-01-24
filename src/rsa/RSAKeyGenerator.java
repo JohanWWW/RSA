@@ -3,8 +3,15 @@ package rsa;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * Utility class for generating RSA key pairs
+ */
 public final class RSAKeyGenerator {
 
+    /**
+     * Generates a pair of keys from specified bit length
+     * @return a new {@link RSAKeyPair} instance
+     */
     public static RSAKeyPair generateKeys(int bitLength) {
         BigInteger p = generatePrime(bitLength / 2);
         BigInteger q = generatePrime(bitLength / 2);

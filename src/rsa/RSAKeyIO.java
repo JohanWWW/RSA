@@ -18,18 +18,21 @@ public class RSAKeyIO {
         this.filePath = "";
     }
 
+    /**
+     * Writes a key pair to a file
+     * @param fileName The name of the key
+     * @param key The key pair
+     */
     public void write(String fileName, RSAKeyPair key) throws IOException {
         writePrivateKey(fileName, key.getPrivateKey());
         writePublicKey(fileName, key.getPublicKey());
     }
 
-    public RSAKeyPair read(String name) throws IOException, ClassNotFoundException {
-        RSAKey publicKey = readKey(publicKeyFullName(name));
-        RSAKey privateKey = readKey(privateKeyFullName(name));
-
-        return new RSAKeyPair(publicKey, privateKey);
-    }
-
+    /**
+     * Reads and returns a single key from file
+     * @param name The name of the key
+     * @return the key from the specified file
+     */
     public RSAKey readKey(String name) throws IOException, ClassNotFoundException {
         var fileInputStream = new FileInputStream(filePath + name);
         var objectInputStream = new ObjectInputStream(fileInputStream);
