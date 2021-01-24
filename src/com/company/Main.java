@@ -39,7 +39,14 @@ public class Main {
             System.out.println();
             System.out.println("[9] -> Exit");
 
-            int choice = readInt("Make a selection: ");
+            int choice;
+            try {
+                choice = readInt("Make a selection: ");
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Please enter integers only.");
+                continue;
+            }
 
             switch (choice) {
                 case 1 -> generateKeys();
@@ -50,6 +57,7 @@ public class Main {
                 case 6 -> encryptBinary();
                 case 7 -> decryptBinary();
                 case 9 -> System.exit(0);
+                default -> System.out.println(choice + " is not an option");
             }
         }
 
@@ -59,7 +67,15 @@ public class Main {
         var keyIO = new RSAKeyIO("keys");
 
         String keyPairName = readString("Please enter key pair name: ");
-        int keySize = readInt("Please enter bit size: ");
+        Integer keySize = null;
+        while (keySize == null) {
+            try {
+                keySize = readInt("Please enter bit size: ");
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Please enter integers only.");
+            }
+        }
 
         RSAKeyPair keyPair = RSAKeyGenerator.generateKeys(keySize);
 
@@ -79,7 +95,7 @@ public class Main {
         copyToClipboard(encryptedMessage);
 
         System.out.println("Encrypted message: " + encryptedMessage);
-        System.out.println("(copied to clipboard)");
+        System.out.println("(the result was copied to your clipboard)");
     }
 
     private static void decryptString() {
@@ -108,8 +124,7 @@ public class Main {
         String encryptedText = RSACryptor.encrypt(text, key);
 
         try {
-            Path outPath =
-                    Files.writeString(Paths.get("IO/output/" + file.getName()), encryptedText);
+            Path outPath = Files.writeString(Paths.get("IO/output/" + file.getName()), encryptedText);
             System.out.println("Written to path: " + outPath.toString());
             Files.delete(Paths.get("IO/input/" + file.getName()));
         }
@@ -226,7 +241,22 @@ public class Main {
             System.out.printf("[%s] -> %s\n", i, children[i].getName());
         }
 
-        int index = readInt("Please enter index: ");
+        int index;
+        while (true) {
+            try {
+                index = readInt("Please enter index: ");
+            }
+            catch (NumberFormatException e) {
+                System.out.println("Please enter integers only.");
+                continue;
+            }
+
+            if (index < 0 || index >= children.length) {
+                System.out.println("Please enter an integer between 0 and " + children.length + " (exclusive).");
+                continue;
+            }
+            break;
+        }
 
         return children[index];
     }
