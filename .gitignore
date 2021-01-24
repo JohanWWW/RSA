@@ -28,8 +28,9 @@
 hs_err_pid*
 
 # RSA keys
-*_priv.key
-*_pub.key
+keys/*
+!keys/readme.txt
+
 
 # IO folder
 IO/input/*
