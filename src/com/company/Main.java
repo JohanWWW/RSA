@@ -29,27 +29,27 @@ public class Main {
 
     private static void menu() {
         while (true) {
-            System.out.println("1. Create key pair");
-            System.out.println("2. Encrypt string");
-            System.out.println("3. Decrypt string");
-            System.out.println("4. Encrypt text file");
-            System.out.println("5. Decrypt text file");
-            System.out.println("6. Encrypt binary");
-            System.out.println("7. Decrypt binary");
+            System.out.println("[1] -> Create key pair");
+            System.out.println("[2] -> Encrypt string");
+            System.out.println("[3] -> Decrypt string");
+            System.out.println("[4] -> Encrypt text file");
+            System.out.println("[5] -> Decrypt text file");
+            System.out.println("[6] -> Encrypt binary");
+            System.out.println("[7] -> Decrypt binary");
             System.out.println();
-            System.out.println("9. Exit");
+            System.out.println("[9] -> Exit");
 
-            String choice = readString("Make a selection: ");
+            int choice = readInt("Make a selection: ");
 
             switch (choice) {
-                case "1" -> generateKeys();
-                case "2" -> encryptString();
-                case "3" -> decryptString();
-                case "4" -> encryptTextFile();
-                case "5" -> decryptTextFile();
-                case "6" -> encryptBinary();
-                case "7" -> decryptBinary();
-                case "9" -> System.exit(0);
+                case 1 -> generateKeys();
+                case 2 -> encryptString();
+                case 3 -> decryptString();
+                case 4 -> encryptTextFile();
+                case 5 -> decryptTextFile();
+                case 6 -> encryptBinary();
+                case 7 -> decryptBinary();
+                case 9 -> System.exit(0);
             }
         }
 
@@ -108,9 +108,9 @@ public class Main {
         String encryptedText = RSACryptor.encrypt(text, key);
 
         try {
-            Path writtenToPath =
+            Path outPath =
                     Files.writeString(Paths.get("IO/output/" + file.getName()), encryptedText);
-            System.out.println("Written to path: " + writtenToPath.toString());
+            System.out.println("Written to path: " + outPath.toString());
             Files.delete(Paths.get("IO/input/" + file.getName()));
         }
         catch (IOException e) {
@@ -135,8 +135,8 @@ public class Main {
         String decryptedText = RSACryptor.decrypt(text, StandardCharsets.UTF_8, key);
 
         try {
-            Path writtenToPath = Files.writeString(Paths.get("IO/output/" + file.getName()), decryptedText);
-            System.out.println("Written to path: " + writtenToPath.toString());
+            Path outPath = Files.writeString(Paths.get("IO/output/" + file.getName()), decryptedText);
+            System.out.println("Written to path: " + outPath.toString());
             Files.delete(Paths.get("IO/input/" + file.getName()));
         }
         catch (IOException e) {
@@ -161,8 +161,8 @@ public class Main {
         byte[] encryptedData = RSACryptor.encrypt(data, key);
 
         try {
-            Path writtenToPath = Files.write(Paths.get("IO/output/" + file.getName()), encryptedData);
-            System.out.println("Written to path: " + writtenToPath.toString());
+            Path outPath = Files.write(Paths.get("IO/output/" + file.getName()), encryptedData);
+            System.out.println("Written to path: " + outPath.toString());
             Files.delete(Paths.get("IO/input/" + file.getName()));
         }
         catch (IOException e) {
@@ -187,8 +187,8 @@ public class Main {
         byte[] decryptedData = RSACryptor.decrypt(data, key);
 
         try {
-            Path writtenToPath = Files.write(Paths.get("IO/output/" + file.getName()), decryptedData);
-            System.out.println("Written to path: " + writtenToPath.toString());
+            Path outPath = Files.write(Paths.get("IO/output/" + file.getName()), decryptedData);
+            System.out.println("Written to path: " + outPath.toString());
             Files.delete(Paths.get("IO/input/" + file.getName()));
         }
         catch (IOException e) {
@@ -247,25 +247,11 @@ public class Main {
     }
 
     private static int readInt() {
-        return scanner.nextInt();
+        return Integer.parseInt(scanner.nextLine());
     }
 
     private static int readInt(String message) {
         System.out.print(message);
         return readInt();
-    }
-
-    private static byte[] readFile(String filePath) throws IOException {
-        var fileInputStream = new FileInputStream(filePath);
-        byte[] data = fileInputStream.readAllBytes();
-        fileInputStream.close();
-        return data;
-    }
-
-    private static void writeFile(String filePath, byte[] data) throws IOException {
-        var fileOutputStream = new FileOutputStream(filePath);
-        fileOutputStream.write(data);
-        fileOutputStream.flush();
-        fileOutputStream.close();
     }
 }
